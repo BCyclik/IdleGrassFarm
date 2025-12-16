@@ -1,7 +1,20 @@
 using UnityEngine;
 
 public class Upgrader_Sickle : Upgrader 
-{
+{    
+    protected override int GetCostRed(Player player)
+    {
+        int level = player.character.sickle.Level;
+
+        return DataBase.RedCoinSickleLevelUpCost * level;
+    }
+
+    protected override int GetCostYellow(Player player)
+    {
+        int level = player.character.sickle.Level;
+
+        return DataBase.YellowCoinSickleLevelUpCost * level;
+    }
     protected override bool IsCurrency(Player player)
     {
         int level = player.character.sickle.Level;

@@ -1,15 +1,21 @@
+using System.Collections.Generic;
+using UnityEngine.Events;
 using UnityEngine;
-
 public class Sickle : MonoBehaviour
 {
-    [SerializeField] private int level = 1;
-    [SerializeField] private float InitDistance = 1;
-    public int Level => level;
+    public UnityEvent EventChangeLevel = new();
 
-    public float Distance => InitDistance + level * DataBase.AdditionalDistancePerLevel;
+    [SerializeField] private GameObject obj;
+    public GameObject Obj => obj;
+    [SerializeField] private int level = 1;
+    public int Level => level;
+    public float Duration => DataBase.BaseDurationSickle - DataBase.AdditionalSpeedSicklePerLevel * level;
+    public float Distance => DataBase.BaseDistanceSickle + level * DataBase.AdditionalDistancePerLevel;
 
     public void LevelUp(int value)
     {
         level += value;
+        EventChangeLevel?.Invoke();
+
     }
 }

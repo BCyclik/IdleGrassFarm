@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eddceaaa6bd9f4169b93a29fb1626a19, type: 3}
   m_Name: YellowGrass
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 013f0cc84d6314bbc9a834b0ff6466ce, type: 3}
   priceRedCoins: 0
   priceYellowCoins: 1
   obj: {fileID: 6310391118181626675, guid: 9efd5097b8d534bf4ba82644125d904b, type: 3}

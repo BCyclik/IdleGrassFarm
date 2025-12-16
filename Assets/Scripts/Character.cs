@@ -1,3 +1,4 @@
+using UnityEngine.Events;
 using UnityEngine;
 
 [RequireComponent(typeof(Sickle))]
@@ -5,18 +6,16 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class Character : MonoBehaviour
 {
+
     public CharacterController characterController => GetComponent<CharacterController>();
     public Inventory inventory => GetComponent<Inventory>();
+    public Animator animator => GetComponent<Animator>();
     public Sickle sickle => GetComponent<Sickle>();
     [SerializeField] private int BaseSpeed = 3;
     public int Speed => BaseSpeed;
     private Vector3 boxSize => new Vector3(characterController.radius * distanceSickle, characterController.height, characterController.radius * distanceSickle);
 
-    private void Awake()
-    {
-    }
     [SerializeField] private bool isMowing = false;
-    [SerializeField] private float Delay = 1;
     private float timer = 0;
     private void Update()
     {
@@ -25,10 +24,10 @@ public class Character : MonoBehaviour
     private float distanceSickle => sickle.Distance;
     private float distance = 1;
     [SerializeField] private LayerMask grassLayer;
-    private void PerformBoxCast()
+    private void PerformBoxCast() // эта функция должна быть в серпе
     {
         Vector3 forwardDirection = transform.forward;
-        Vector3 startPoint = transform.position;
+        Vector3 startPoint = transform.position + characterController.center;
 
         var hits = Physics.BoxCastAll(
             startPoint,
@@ -41,13 +40,21 @@ public class Character : MonoBehaviour
 
         if (hits.Length > 0)
         {
-            if (timer > 0)
+            isMowing = true;
+            if (timer < sickle.Duration)
             {
-                timer -= Time.deltaTime;
+                float t = timer / sickle.Duration;
+
+                Quaternion startRotation = Quaternion.Euler(0, 0, -35);
+                Quaternion endRotation = Quaternion.Euler(0, 0, 35);
+
+                sickle.Obj.transform.rotation = Quaternion.Lerp(startRotation, endRotation, t);
+
+                timer += Time.deltaTime;
             }
             else
             {
-                timer = Delay;
+                timer = 0;
                 foreach (RaycastHit hit in hits)
                 {
                     var grass = hit.collider.GetComponent<Grass>();
@@ -57,16 +64,29 @@ public class Character : MonoBehaviour
         }
         else
         {
-            timer = Delay;
+            isMowing = false;
+            timer = 0;
         }
+
+        sickle.Obj.SetActive(isMowing);
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = isMowing ? Color.green : Color.red; // Меняем цвет в зависимости от состояния
-        Gizmos.DrawRay(transform.position, transform.forward * distance);
+        Vector3 startPoint = transform.position + characterController.center;
 
-        Vector3 hitPoint = transform.position + transform.forward * distance;
+        Gizmos.color = isMowing ? Color.green : Color.red; // Меняем цвет в зависимости от состояния
+        Gizmos.DrawRay(startPoint, transform.forward * distance);
+
+        Vector3 hitPoint = startPoint + transform.forward * distance;
         Gizmos.DrawWireCube(hitPoint, boxSize);
+    }
+    public void LevelUp()
+    {
+        animator.SetTrigger("Win");
+    }
+    public void Wave()
+    {
+        animator.SetTrigger("Wave");
     }
 }

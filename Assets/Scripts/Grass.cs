@@ -2,15 +2,27 @@ using UnityEngine;
 
 public class Grass : MonoBehaviour
 {
-    public FarmerField controller {get; set;}
+    public FarmerField controller { get; set; }
     //private Item item {get; set;}
 
+    [SerializeField] private GameObject obj_Full;
+    [SerializeField] private GameObject obj_Low;
     [SerializeField] private bool growing = false;
-    public bool Growing => growing;
+    public bool Growing
+    {
+        get => growing;
+        set
+        {
+            growing = value;
+            obj_Low.SetActive(value);
+            obj_Full.SetActive(!value);
+            GetComponent<Collider>().enabled = !value;
+        }
+    }
     private float timer = 0;
     // public void Init(FarmerField controller)
     // {
-        
+
     // }
     public void Cut(Character character)
     {
@@ -20,7 +32,7 @@ public class Grass : MonoBehaviour
         if (!result) return;
 
         timer = controller.GetDelay();
-        growing = true;
+        Growing = true;
     }
     private void Update()
     {
@@ -29,7 +41,7 @@ public class Grass : MonoBehaviour
         if (timer > 0)
         {
             timer -= Time.deltaTime;
-        } 
+        }
         else
         {
             GrewUp();
@@ -37,6 +49,6 @@ public class Grass : MonoBehaviour
     }
     private void GrewUp()
     {
-        growing = false;
+        Growing = false;
     }
 }

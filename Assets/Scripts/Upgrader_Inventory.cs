@@ -1,12 +1,26 @@
 using UnityEngine;
 
-public class Upgrader_Inventory : Upgrader 
+public class Upgrader_Inventory : Upgrader
 {
+    protected override int GetCostRed(Player player)
+    {
+        int level = player.character.inventory.Level;
+
+        return DataBase.RedCoinInventoryLevelUpCost * level;
+    }
+
+    protected override int GetCostYellow(Player player)
+    {
+        int level = player.character.inventory.Level;
+
+        return DataBase.YellowCoinInventoryLevelUpCost * level;
+    }
+
     protected override bool IsCurrency(Player player)
     {
         int level = player.character.inventory.Level;
 
-        bool value = player.RedCoins >= DataBase.RedCoinInventoryLevelUpCost * level && 
+        bool value = player.RedCoins >= DataBase.RedCoinInventoryLevelUpCost * level &&
                     player.YellowCoins >= DataBase.YellowCoinInventoryLevelUpCost * level;
 
         return value;

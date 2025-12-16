@@ -5,6 +5,7 @@ public class Item : ScriptableObject
     public string Id => name;
 
     [SerializeField] private Sprite icon;
+    public Sprite Icon => icon;
     [SerializeField] private int priceRedCoins;
     public int PriceRedCoins => priceRedCoins;
     [SerializeField] private int priceYellowCoins;

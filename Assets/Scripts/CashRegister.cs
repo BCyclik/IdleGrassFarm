@@ -27,6 +27,7 @@ public class CashRegister : MonoBehaviour
 
         player.YellowCoins += item.PriceYellowCoins;
         player.RedCoins += item.PriceRedCoins;
+        character.Wave(); // для красоты
 
         QueueCustomers.RemoveAt(0);
         RefreshQueue();
